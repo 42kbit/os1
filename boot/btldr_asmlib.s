@@ -5,23 +5,15 @@ btldr_hold:
 	pushw %bp
 	movw %sp, %bp
 
-	hlt
+hltlabel:
+	jmp %cs:hltlabel
 
 	mov %bp, %sp
 	popw %bp
 	ret
-// extern void _cdecl btldr_init_stack();
-.globl btldr_init_stack
-btldr_init_stack:
-
-	movw $0x7c00, %ax
-	movw %ax, %sp
-	movw %ax, %bp
-	ret
-
 //extern void _atr_cdecl botld_clear_display();
-.globl btldr_clear_display
-btldr_clear_display:
+.globl btldr_display_clear
+btldr_display_clear:
 	pushw %bp
 	pushw %ax
 	movw %sp, %bp
@@ -33,3 +25,17 @@ btldr_clear_display:
 	movw %bp, %sp
 	popw %ax
 	popw %bp
+	ret
+//extern void _atr_cdecl btldr_display_putc(char c);
+.globl btldr_display_putc
+btldr_display_putc:
+	pushw %bp
+	movw %sp, %bp
+
+	movb $0x0e, %ah
+	movb 6(%bp), %al
+	int $0x10 	
+
+	movw %bp, %sp
+	popw %bp		
+	ret

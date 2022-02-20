@@ -20,14 +20,8 @@ makedirbuild:
 	mkdir -p build
 	mkdir -p build/obj
 
-$(BUILD_DIR)/os.bin: $(BUILD_DIR)/bootsec.bin $(BUILD_DIR)/btldr.bin
-	cat $^ > $@ 
-
-$(BUILD_DIR)/bootsec.bin: $(BUILD_DIR)/obj/bootsec.o
+$(BUILD_DIR)/os.bin: $(BUILD_DIR)/obj/btsec.o $(BUILD_DIR)/obj/main.o $(BUILD_DIR)/obj/btldr_asmlib.o $(BUILD_DIR)/obj/btldr_clib.o
 	$(LD) -Ttext 0x7c00 -o $@ $^
-
-$(BUILD_DIR)/btldr.bin: $(BUILD_DIR)/obj/main.o $(BUILD_DIR)/obj/bootldr.o
-	$(LD) -Ttext 0x1000 -o $@ $^
 
 $(BUILD_DIR)/obj/%.o: boot/%.c
 	$(C16) $^ -o $@
